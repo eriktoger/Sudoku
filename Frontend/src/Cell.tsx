@@ -1,5 +1,4 @@
 import { Dispatch } from "react";
-import { Coordinate } from "./types";
 
 export const Cell = ({
   content,

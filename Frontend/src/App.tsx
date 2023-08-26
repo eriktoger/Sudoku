@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Cell } from "./Cell";
 import { calcAlternatives, calcBorderStyle } from "./helpers";
 import { Board, Coordinate } from "./types";
@@ -15,7 +15,8 @@ function App() {
   );
 
   const getBoard = (hiddenCells: number) => {
-    fetch("https://localhost:7096/sudoku", {
+    const url = import.meta.env.VITE_BACKEND_URL;
+    fetch(url, {
       mode: "cors",
       headers: {
         "Access-Control-Allow-Origin": "*",
