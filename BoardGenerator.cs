@@ -14,28 +14,22 @@
             _lineShufflers = new List<int>{ 3, 3, 1, 3, 3, 1, 3, 3 };
         }
 
-        public List<List<int>>  Run()
+       
+        public List<List<int>> Run(List<int>? row = null)
         {
             List<List<int>> board = new List<List<int>>();
-            var intialRow = _initialRow.OrderBy(_ => _rand.Next()).ToList();
-            
+            var intitialRow = row != null ? row :_initialRow.OrderBy(_ => _rand.Next()).ToList();
 
-            var currentRow = intialRow;
+
+            var currentRow = intitialRow;
 
             board.Add(currentRow);
-            foreach (var lineShuffler in _lineShufflers){
-
-                currentRow =currentRow.Select(el => 
-                {
-                    var newValue = el + lineShuffler;
-                    if (newValue > 9)
-                    {
-                        newValue -= 9;
-                    }
-                    return  newValue; }
-            
-            ).ToList() ;
-            
+            foreach (var lineShuffler in _lineShufflers)
+            {
+                List<int> first = currentRow.Take(lineShuffler).ToList();
+                List<int> second = currentRow.Skip(lineShuffler).ToList();
+                second.AddRange(first);
+                currentRow = second;
                 board.Add(currentRow);
 
             }

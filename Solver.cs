@@ -24,8 +24,20 @@ namespace SudokuApi
             }
         }
 
-        private static List<Coordinate> _squareCenterIndicies = new List<Coordinate>();
-        private static List<Coordinate> _adjacentOffets = new List<Coordinate>();
+        private static List<Coordinate> _squareCenterIndicies = new List<Coordinate>
+            {
+                 new Coordinate(1, 1),new Coordinate(1, 4),new Coordinate(1, 7),
+                 new Coordinate(4, 1),new Coordinate(4, 4),new Coordinate(4, 7),
+                 new Coordinate(7, 1),new Coordinate(7, 4),new Coordinate(7, 7)
+
+            };
+        private static List<Coordinate> _adjacentOffets = new List<Coordinate>
+            {
+                 new Coordinate(-1, -1),new Coordinate(-1, 0),new Coordinate(-1, 1),
+                 new Coordinate(0, -1),new Coordinate(0, 0),new Coordinate(0, 1),
+                 new Coordinate(1, -1),new Coordinate(1, 0),new Coordinate(1, 1),
+
+            };
         private static bool HasDuplicates(List<int> list)
         {
             return list.Distinct().Count() != list.Count;
@@ -96,23 +108,6 @@ namespace SudokuApi
             return true;
         }
 
-        public Solver()
-        {
-            _squareCenterIndicies = new List<Coordinate>
-            {
-                 new Coordinate(1, 1),new Coordinate(1, 4),new Coordinate(1, 7),
-                 new Coordinate(4, 1),new Coordinate(4, 4),new Coordinate(4, 7),
-                 new Coordinate(7, 1),new Coordinate(7, 4),new Coordinate(7, 7)
-
-            };
-
-            _adjacentOffets = new List<Coordinate>
-            {
-                 new Coordinate(-1, -1),new Coordinate(-1, 0),new Coordinate(-1, 1),
-                 new Coordinate(0, -1),new Coordinate(0, 0),new Coordinate(0, 1),
-                 new Coordinate(1, -1),new Coordinate(1, 0),new Coordinate(1, 1),
-
-            };
-        }
+       
     }
 }
