@@ -1,47 +1,14 @@
 import { useEffect, useState } from "react";
 import { Cell } from "./Cell";
+import { calcAlternatives, calcBorderStyle } from "./helpers";
+import { Board, Coordinate } from "./types";
 
-type Board = Number[][];
-
-const boardIndicies = [...Array(81).keys()];
-
-const BORDER_STYLE = "2px solid blue";
-const DEFAULT_BORDER_STYLE = "1px solid lightgray";
-const calcBorderStyle = (rowIndex: number, columnIndex: number) => {
-  const borderStyle = {
-    borderTop: DEFAULT_BORDER_STYLE,
-    borderBottom: DEFAULT_BORDER_STYLE,
-    borderRight: DEFAULT_BORDER_STYLE,
-    borderLeft: DEFAULT_BORDER_STYLE,
-  };
-
-  if (rowIndex === 0 || rowIndex === 3 || rowIndex === 6) {
-    borderStyle.borderTop = BORDER_STYLE;
-  }
-  if (rowIndex === 8) {
-    borderStyle.borderBottom = BORDER_STYLE;
-  }
-  if (rowIndex === 2 || rowIndex === 5) {
-    borderStyle.borderBottom = "";
-  }
-
-  if (columnIndex == 0 || columnIndex === 3 || columnIndex === 6) {
-    borderStyle.borderLeft = BORDER_STYLE;
-  }
-  if (columnIndex === 2 || columnIndex === 5) {
-    borderStyle.borderRight = "";
-  }
-
-  if (columnIndex == 8) {
-    borderStyle.borderRight = BORDER_STYLE;
-  }
-
-  return borderStyle;
-};
 function App() {
   const [board, setBoard] = useState<Board | null>(null);
   const [maskedBoard, setMaskedBoard] = useState<Board | null>(null);
   const [visualBoard, setVisualBoard] = useState<Board | null>(null);
+  const [currentAlternatives, setCurrentAlternatives] = useState<number[]>([]);
+  const [currentCell, setCurrentCell] = useState<Coordinate | null>(null);
   useEffect(() => {
     fetch("https://localhost:7096/sudoku", {
       mode: "cors",
@@ -50,7 +17,7 @@ function App() {
       },
     }).then((response) => {
       response.json().then((data) => {
-        const maskingIndicies = [...boardIndicies]
+        const maskingIndicies = [...Array(81).keys()]
           .sort(() => Math.random() - 0.5)
           .slice(0, 30);
         const newBoard = JSON.parse(JSON.stringify(data));
@@ -59,13 +26,13 @@ function App() {
           const col = maskingIndex - row * 9;
           newBoard[row][col] = 0;
         }
-        setMaskedBoard(newBoard);
-        setVisualBoard(newBoard);
+        setMaskedBoard(JSON.parse(JSON.stringify(newBoard)));
+        setVisualBoard(JSON.parse(JSON.stringify(newBoard)));
         setBoard(data);
       });
     });
   }, []);
-  console.log({ board }, 1);
+  console.log({ maskedBoard }, 1);
   return (
     <div>
       <h1>Sudoku!</h1>
@@ -77,18 +44,51 @@ function App() {
           {visualBoard.map((row, rowIndex) => {
             return row.map((item, columnIndex) => {
               const borderStyle = calcBorderStyle(rowIndex, columnIndex);
+              const alternatives = calcAlternatives(
+                visualBoard,
+                rowIndex,
+                columnIndex
+              );
               return (
                 <Cell
+                  key={`${rowIndex}-${columnIndex}`}
                   content={item.toString()}
                   isEditable={maskedBoard?.[rowIndex][columnIndex] === 0}
-                  suggestions={[1, 2, 3]}
+                  alternatives={alternatives}
                   borderStyle={borderStyle}
+                  setAlternatives={setCurrentAlternatives}
+                  isSelected={
+                    currentCell?.rowIndex === rowIndex &&
+                    currentCell?.columnIndex === columnIndex
+                  }
+                  setCurrentCell={() =>
+                    setCurrentCell({ rowIndex, columnIndex })
+                  }
                 />
               );
             });
           })}
         </div>
       )}
+      {currentAlternatives.map((alternative, index) => (
+        <div
+          key={index}
+          onClick={() => {
+            setVisualBoard((current) => {
+              if (!currentCell || !current) {
+                return current;
+              }
+              current[currentCell.rowIndex][currentCell.columnIndex] =
+                alternative;
+              return current;
+            });
+            setCurrentCell(null);
+            setCurrentAlternatives([]);
+          }}
+        >
+          {alternative}
+        </div>
+      ))}
     </div>
   );
 }

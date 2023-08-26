@@ -1,28 +1,42 @@
+import { Dispatch } from "react";
+import { Coordinate } from "./types";
+
 export const Cell = ({
   content,
   isEditable,
-  suggestions,
+  alternatives,
   borderStyle,
+  isSelected,
+  setCurrentCell,
+  setAlternatives,
 }: {
   content: string;
   isEditable: boolean;
-  suggestions: number[];
+  alternatives: number[];
   borderStyle: {
     [key: string]: string;
   };
+  isSelected: boolean;
+  setCurrentCell: () => void;
+  setAlternatives: Dispatch<React.SetStateAction<number[]>>;
 }) => {
   const display = content === "0" ? "" : content;
 
   return (
     <div
       onClick={() => {
-        console.log(isEditable, suggestions);
+        if (isEditable) {
+          setCurrentCell();
+          setAlternatives(alternatives);
+        }
       }}
       style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontWeight: isEditable ? "normal" : "bold",
+        fontSize: isEditable ? 14 : 16,
+        fontWeight: isEditable ? "lighter" : "bolder",
+        backgroundColor: isSelected ? "lightgreen" : "white",
         height: 40,
         width: 40,
         boxSizing: "border-box",
