@@ -40,19 +40,23 @@ function App() {
   };
 
   return (
-    <div>
+    <div
+      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
       <h1>Sudoku!</h1>
-      {(!visualBoard || gameOver) && (
-        <div>
-          <span>{gameOverMessage}</span>
-          <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => getBoard(1)}>Test</button>
-            <button onClick={() => getBoard(30)}>Easy</button>
-            <button onClick={() => getBoard(45)}>Medium</button>
-            <button onClick={() => getBoard(60)}>Hard</button>
+      <div style={{ height: 40 }}>
+        {(!visualBoard || gameOver) && (
+          <div>
+            <span>{gameOverMessage}</span>
+            <div style={{ display: "flex", gap: 10 }}>
+              <button onClick={() => getBoard(1)}>Test</button>
+              <button onClick={() => getBoard(30)}>Easy</button>
+              <button onClick={() => getBoard(45)}>Medium</button>
+              <button onClick={() => getBoard(60)}>Hard</button>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       {visualBoard && (
         <div
           style={{ display: "grid", gridTemplateColumns: "repeat(9, 40px)" }}
@@ -86,35 +90,46 @@ function App() {
           })}
         </div>
       )}
-      <div style={{ display: "flex", gap: 10, margin: 10 }}>
-        {currentAlternatives.map((alternative, index) => (
-          <button
-            key={index}
-            onClick={() => {
-              setVisualBoard((current) => {
-                if (!currentCell || !current) {
-                  return current;
-                }
-                current[currentCell.rowIndex][currentCell.columnIndex] =
-                  alternative;
-                const boardDone = !current.flat().some((num) => num === 0);
-
-                if (boardDone) {
-                  if (!gameOver) {
-                    setGameOverMessage("Great you did it!");
-                    setGameOver(true);
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          margin: 10,
+          height: 60,
+        }}
+      >
+        <div style={{ display: "flex", gap: 10 }}>
+          {currentAlternatives.map((alternative, index) => (
+            <button
+              style={{ height: 30, width: 30 }}
+              key={index}
+              onClick={() => {
+                setVisualBoard((current) => {
+                  if (!currentCell || !current) {
+                    return current;
                   }
-                }
-                return current;
-              });
+                  current[currentCell.rowIndex][currentCell.columnIndex] =
+                    alternative;
+                  const boardDone = !current.flat().some((num) => num === 0);
 
-              setCurrentCell(null);
-              setCurrentAlternatives([]);
-            }}
-          >
-            {alternative}
-          </button>
-        ))}
+                  if (boardDone) {
+                    if (!gameOver) {
+                      setGameOverMessage("Great you did it!");
+                      setGameOver(true);
+                    }
+                  }
+                  return current;
+                });
+
+                setCurrentCell(null);
+                setCurrentAlternatives([]);
+              }}
+            >
+              {alternative}
+            </button>
+          ))}
+        </div>
 
         {currentCell &&
           visualBoard?.[currentCell.rowIndex][currentCell.columnIndex] !==
