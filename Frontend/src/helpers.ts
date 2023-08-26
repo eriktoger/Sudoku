@@ -37,8 +37,8 @@ export const calcBorderStyle = (rowIndex: number, columnIndex: number) => {
 
 export const findSquareCenter = (rowIndex: number, columnIndex: number) => {
   return {
-    rowIndex: Math.floor(rowIndex / 3) + 1,
-    columnIndex: Math.floor(columnIndex / 3) + 1,
+    rowIndex: Math.floor(rowIndex / 3) * 3 + 1,
+    columnIndex: Math.floor(columnIndex / 3) * 3 + 1,
   };
 };
 
@@ -68,14 +68,11 @@ export const calcAlternatives = (
   const squareCenter = findSquareCenter(rowIndex, columnIndex);
   const squareIndicies = adjacentOffsets.map((offset) => ({
     rowIndex: squareCenter.rowIndex + offset.rowIndex,
-    columnIndex: squareCenter.rowIndex + offset.columnIndex,
+    columnIndex: squareCenter.columnIndex + offset.columnIndex,
   }));
   const square = squareIndicies.map(
     ({ rowIndex, columnIndex }) => board[rowIndex][columnIndex]
   );
-  if (rowIndex === 0 && columnIndex === 0) {
-    console.log(row, column, square);
-  }
 
   return alternatives.filter(
     (alternative) =>
