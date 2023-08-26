@@ -9,7 +9,12 @@ function App() {
   const [visualBoard, setVisualBoard] = useState<Board | null>(null);
   const [currentAlternatives, setCurrentAlternatives] = useState<number[]>([]);
   const [currentCell, setCurrentCell] = useState<Coordinate | null>(null);
-  useEffect(() => {
+  const [gameOver, setGameOver] = useState(true);
+  const [gameOverMessage, setGameOverMessage] = useState(
+    "Choose a diffculty to start!"
+  );
+
+  const getBoard = (hiddenCells: number) => {
     fetch("https://localhost:7096/sudoku", {
       mode: "cors",
       headers: {
@@ -19,7 +24,7 @@ function App() {
       response.json().then((data) => {
         const maskingIndicies = [...Array(81).keys()]
           .sort(() => Math.random() - 0.5)
-          .slice(0, 30);
+          .slice(0, hiddenCells);
         const newBoard = JSON.parse(JSON.stringify(data));
         for (const maskingIndex of maskingIndicies) {
           const row = Math.floor(maskingIndex / 9);
@@ -29,14 +34,25 @@ function App() {
         setMaskedBoard(JSON.parse(JSON.stringify(newBoard)));
         setVisualBoard(JSON.parse(JSON.stringify(newBoard)));
         setBoard(data);
+        setGameOver(false);
       });
     });
-  }, []);
-  console.log({ maskedBoard }, 1);
+  };
+
   return (
     <div>
       <h1>Sudoku!</h1>
-      {!visualBoard && <div>Loading...</div>}
+      {(!visualBoard || gameOver) && (
+        <div>
+          <span>{gameOverMessage}</span>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button onClick={() => getBoard(1)}>Test</button>
+            <button onClick={() => getBoard(30)}>Easy</button>
+            <button onClick={() => getBoard(45)}>Medium</button>
+            <button onClick={() => getBoard(60)}>Hard</button>
+          </div>
+        </div>
+      )}
       {visualBoard && (
         <div
           style={{ display: "grid", gridTemplateColumns: "repeat(9, 40px)" }}
@@ -70,25 +86,69 @@ function App() {
           })}
         </div>
       )}
-      {currentAlternatives.map((alternative, index) => (
-        <div
-          key={index}
-          onClick={() => {
-            setVisualBoard((current) => {
-              if (!currentCell || !current) {
+      <div style={{ display: "flex", gap: 10, margin: 10 }}>
+        {currentAlternatives.map((alternative, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              setVisualBoard((current) => {
+                if (!currentCell || !current) {
+                  return current;
+                }
+                current[currentCell.rowIndex][currentCell.columnIndex] =
+                  alternative;
+                const boardDone = !current.flat().some((num) => num === 0);
+
+                if (boardDone) {
+                  if (!gameOver) {
+                    setGameOverMessage("Great you did it!");
+                    setGameOver(true);
+                  }
+                }
                 return current;
-              }
-              current[currentCell.rowIndex][currentCell.columnIndex] =
-                alternative;
-              return current;
-            });
-            setCurrentCell(null);
-            setCurrentAlternatives([]);
-          }}
-        >
-          {alternative}
+              });
+
+              setCurrentCell(null);
+              setCurrentAlternatives([]);
+            }}
+          >
+            {alternative}
+          </button>
+        ))}
+
+        {currentCell &&
+          visualBoard?.[currentCell.rowIndex][currentCell.columnIndex] !==
+            0 && (
+            <button
+              onClick={() => {
+                setVisualBoard((current) => {
+                  if (!currentCell || !current) {
+                    return current;
+                  }
+                  current[currentCell.rowIndex][currentCell.columnIndex] = 0;
+                  return current;
+                });
+                setCurrentCell(null);
+                setCurrentAlternatives([]);
+              }}
+            >
+              Reset
+            </button>
+          )}
+      </div>
+      {!gameOver && (
+        <div style={{ width: 360, display: "flex", justifyContent: "center" }}>
+          <button
+            onClick={() => {
+              setVisualBoard(board);
+              setGameOver(true);
+              setGameOverMessage("Winners never quit, and quitters never win.");
+            }}
+          >
+            I give up!
+          </button>
         </div>
-      ))}
+      )}
     </div>
   );
 }
