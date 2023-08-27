@@ -4,7 +4,6 @@ namespace SudokuApi
 {
     public class Solver
     {
-
         public class Coordinate
         {
             public int Row { get; }
@@ -53,20 +52,9 @@ namespace SudokuApi
             return column;
         }
 
-        private static List<int> ExtractSquare(List<List<int>> board, List<List <Coordinate>> squareCoordinates)
-        {
-            List<int> column = new List<int>();
-            List<Coordinate> flattenedCoordinates = squareCoordinates.SelectMany(x => x).ToList();
-            foreach (var index in flattenedCoordinates)
-            {
-                column.Add(board[index.Row][index.Column] );
-            }
-            return column;
-        }
-
         public static bool BoardIsSolved(List<List<int>> board)
         {
-            
+
             if (board.Count != 9)
             {
                 return false;
@@ -92,22 +80,19 @@ namespace SudokuApi
             foreach (var squareCenterIndex in _squareCenterIndicies)
             {
                 var square = new List<int> { };
-               foreach(var adjacentOffset in _adjacentOffets)
+                foreach (var adjacentOffset in _adjacentOffets)
                 {
                     var adjacent = squareCenterIndex + adjacentOffset;
-                    square.Add(board[adjacent.Row][adjacent.Column] );
+                    square.Add(board[adjacent.Row][adjacent.Column]);
                 }
                 if (HasDuplicates(square))
                 {
                     return false;
                 }
-
             }
-            
-       
             return true;
         }
 
-       
+
     }
 }

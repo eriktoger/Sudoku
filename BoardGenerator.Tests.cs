@@ -3,10 +3,10 @@
 namespace SudokuApi.Tests
 {
     [TestClass]
-    public class BoardGeneratorTests 
+    public class BoardGeneratorTests
 
     {
-       
+
         [TestMethod]
         public void RandomTestBoardGeneration()
         {
@@ -41,7 +41,7 @@ namespace SudokuApi.Tests
             var generator = new BoardGenerator();
 
             // Act
-            List<List<int>> generatedBoard = generator.Run( new List<int> { 7, 2, 3, 8, 4, 1, 5, 6, 9 });
+            List<List<int>> generatedBoard = generator.Run(new List<int> { 7, 2, 3, 8, 4, 1, 5, 6, 9 });
             var isSolved = Solver.BoardIsSolved(generatedBoard);
 
 
@@ -68,13 +68,13 @@ namespace SudokuApi.Tests
             var generator = new BoardGenerator();
 
             // Act
-            List<List<int>> generatedBoard = generator.Run(new List<int> { 8, 9, 3,  2, 7, 6,  4, 5, 1 });
+            List<List<int>> generatedBoard = generator.Run(new List<int> { 8, 9, 3, 2, 7, 6, 4, 5, 1 });
             var isSolved = Solver.BoardIsSolved(generatedBoard);
 
 
             Assert.IsTrue(isSolved);
         }
 
-       
+
     }
 }

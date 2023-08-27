@@ -6,7 +6,7 @@ namespace SudokuApi.Controllers
     [Route("/sudoku")]
     public class SudokuController : Controller
     {
-       
+
         private readonly ILogger<SudokuController> _logger;
 
         private BoardGenerator _boardGenerator;
@@ -20,9 +20,9 @@ namespace SudokuApi.Controllers
         [HttpGet(Name = "GetSoduku")]
         public IActionResult Get()
         {
-           var board = _boardGenerator.Run();
+            var board = _boardGenerator.Run();
             return Json(board);
-         
+
         }
     }
 }
