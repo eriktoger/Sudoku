@@ -1,8 +1,7 @@
-﻿namespace SudokuApi
+﻿namespace SudokuApi.Services
 {
-    public class BoardGenerator
+    internal class BoardGenerator : IBoardGenerator
     {
-
         private List<int> _initialRow;
         private readonly Random _rand;
         private readonly List<int> _lineShufflers;

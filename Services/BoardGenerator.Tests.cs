@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SudokuApi.Tests
+namespace SudokuApi.Services
 {
     [TestClass]
     public class BoardGeneratorTests
