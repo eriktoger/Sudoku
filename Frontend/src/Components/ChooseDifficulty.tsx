@@ -9,36 +9,36 @@ export const ChooseDifficulty = () => {
   const gameOverMessage = useAppStore((state) => state.gameOverMessage);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getBoard = (hiddenCells: number) => {
+  const getBoard = async (hiddenCells: number) => {
     const url = import.meta.env.VITE_BACKEND_URL;
     setIsLoading(true);
     try {
-      fetch(url, {
+      const res = await fetch(url, {
         mode: "cors",
         headers: {
           "Access-Control-Allow-Origin": "*",
         },
-      }).then((response) => {
-        response.json().then((data) => {
-          const maskingIndicies = [...Array(81).keys()]
-            .sort(() => Math.random() - 0.5)
-            .slice(0, hiddenCells);
-          const newBoard = JSON.parse(JSON.stringify(data));
-          for (const maskingIndex of maskingIndicies) {
-            const row = Math.floor(maskingIndex / 9);
-            const col = maskingIndex - row * 9;
-            newBoard[row][col] = 0;
-          }
-          setMaskedBoard(JSON.parse(JSON.stringify(newBoard)));
-          setVisualBoard(JSON.parse(JSON.stringify(newBoard)));
-          setBoard(data);
-          setGameOver(false);
-        });
       });
+      const data = await res.json();
+
+      const maskingIndicies = [...Array(81).keys()]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, hiddenCells);
+      const newBoard = JSON.parse(JSON.stringify(data));
+      for (const maskingIndex of maskingIndicies) {
+        const row = Math.floor(maskingIndex / 9);
+        const col = maskingIndex - row * 9;
+        newBoard[row][col] = 0;
+      }
+      setMaskedBoard(JSON.parse(JSON.stringify(newBoard)));
+      setVisualBoard(JSON.parse(JSON.stringify(newBoard)));
+      setBoard(data);
+      setGameOver(false);
     } catch (error) {
       console.warn({ error });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
