@@ -18,6 +18,8 @@ type State = {
   setCurrentCell: (currentCell: Coordinate | null) => void;
   currentAlternatives: number[];
   setCurrentAlternatives: (currentAlternatives: number[]) => void;
+  isChooseButtonLoading: boolean;
+  setIsChooseButtonLoading: (isChooseButtonLoading: boolean) => void;
 };
 
 export const useAppStore = create<State>((set) => ({
@@ -36,6 +38,9 @@ export const useAppStore = create<State>((set) => ({
   currentAlternatives: [],
   setCurrentAlternatives: (currentAlternatives: number[]) =>
     set({ currentAlternatives }),
+  isChooseButtonLoading: false,
+  setIsChooseButtonLoading: (isChooseButtonLoading: boolean) =>
+    set({ isChooseButtonLoading }),
 
   applyAlternativeToVisualBoard: (alternative: number) =>
     set((state) => {

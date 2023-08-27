@@ -1,17 +1,26 @@
-import { useState } from "react";
 import { useAppStore } from "../store";
 
-export const ChooseDifficulty = () => {
+const ChooseButton = ({
+  text,
+  hiddenCells,
+}: {
+  text: string;
+  hiddenCells: number;
+}) => {
   const setBoard = useAppStore((state) => state.setBoard);
   const setMaskedBoard = useAppStore((state) => state.setMaskedBoard);
   const setVisualBoard = useAppStore((state) => state.setVisualBoard);
   const setGameOver = useAppStore((state) => state.setGameOver);
-  const gameOverMessage = useAppStore((state) => state.gameOverMessage);
-  const [isLoading, setIsLoading] = useState(false);
+  const isChooseButtonLoading = useAppStore(
+    (state) => state.isChooseButtonLoading
+  );
+  const setIsChooseButtonLoading = useAppStore(
+    (state) => state.setIsChooseButtonLoading
+  );
 
   const getBoard = async (hiddenCells: number) => {
     const url = import.meta.env.VITE_BACKEND_URL;
-    setIsLoading(true);
+    setIsChooseButtonLoading(true);
     try {
       const res = await fetch(url, {
         mode: "cors",
@@ -37,26 +46,36 @@ export const ChooseDifficulty = () => {
     } catch (error) {
       console.warn({ error });
     } finally {
-      setIsLoading(false);
+      setIsChooseButtonLoading(false);
     }
   };
 
   return (
+    <button
+      disabled={isChooseButtonLoading}
+      onClick={() => getBoard(hiddenCells)}
+    >
+      {text}
+    </button>
+  );
+};
+
+const GameModes = [
+  { text: "Test", hiddenCells: 1 },
+  { text: "Easy", hiddenCells: 30 },
+  { text: "Medium", hiddenCells: 45 },
+  { text: "Hard", hiddenCells: 60 },
+] as const;
+
+export const ChooseDifficulty = () => {
+  const gameOverMessage = useAppStore((state) => state.gameOverMessage);
+  return (
     <div>
       <span>{gameOverMessage}</span>
       <div style={{ display: "flex", gap: 10 }}>
-        <button disabled={isLoading} onClick={() => getBoard(1)}>
-          Test
-        </button>
-        <button disabled={isLoading} onClick={() => getBoard(30)}>
-          Easy
-        </button>
-        <button disabled={isLoading} onClick={() => getBoard(45)}>
-          Medium
-        </button>
-        <button disabled={isLoading} onClick={() => getBoard(60)}>
-          Hard
-        </button>
+        {GameModes.map(({ text, hiddenCells }) => (
+          <ChooseButton key={text} text={text} hiddenCells={hiddenCells} />
+        ))}
       </div>
     </div>
   );
