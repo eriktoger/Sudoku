@@ -3,7 +3,7 @@
 ### Api
 
 - Creates a new Sudoku game
-- Deployed at [azure](erikssudoku.azurewebsites.net)
+- Deployed at [azure](https://erikssudoku.azurewebsites.net/sudoku)
 - To run locally: cd into api and run `dotnet run --urls console https://localhost:7096`
 
 ### Frontend
