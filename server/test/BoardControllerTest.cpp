@@ -1,6 +1,6 @@
-#include "MyControllerTest.hpp"
+#include "BoardControllerTest.hpp"
 
-#include "controller/MyController.hpp"
+#include "controller/BoardController.hpp"
 
 #include "app/MyApiTestClient.hpp"
 #include "app/TestComponent.hpp"
@@ -9,7 +9,7 @@
 
 #include "oatpp-test/web/ClientServerTestRunner.hpp"
 
-void MyControllerTest::onRun()
+void BoardControllerTest::onRun()
 {
 
   /* Register test components */
@@ -19,7 +19,7 @@ void MyControllerTest::onRun()
   oatpp::test::web::ClientServerTestRunner runner;
 
   /* Add MyController endpoints to the router of the test server */
-  runner.addController(std::make_shared<MyController>());
+  runner.addController(std::make_shared<BoardController>());
 
   /* Run test */
   runner.run([this, &runner]
@@ -44,13 +44,12 @@ void MyControllerTest::onRun()
                OATPP_ASSERT(response->getStatusCode() == 200);
 
                /* Read response body as MessageDto */
-               auto message = response->readBodyToDto<oatpp::Object<MyDto>>(objectMapper.get());
+               auto message = response->readBodyToDto<oatpp::Object<BoardDto>>(objectMapper.get());
 
                /* Assert that received message is as expected */
                OATPP_ASSERT(message);
                OATPP_ASSERT(message->statusCode == 200);
-               OATPP_ASSERT(message->message == "The plan is to build a c++ backend to replace my C# one");
-             },
+               OATPP_ASSERT(message->message == "The plan is to build a c++ backend to replace my C# one"); },
              std::chrono::minutes(10) /* test timeout */);
 
   /* wait all server threads finished */

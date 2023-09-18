@@ -10,13 +10,14 @@
  *  Data Transfer Object. Object containing fields only.
  *  Used in API for serialization/deserialization and validation
  */
-class MyDto : public oatpp::DTO {
-  
-  DTO_INIT(MyDto, DTO)
-  
+class BoardDto : public oatpp::DTO
+{
+
+  DTO_INIT(BoardDto, DTO)
+
   DTO_FIELD(Int32, statusCode);
   DTO_FIELD(String, message);
-  
+  DTO_FIELD(Vector<Vector<Int32>>, board); ///< Map<String, List<User>>
 };
 
 #include OATPP_CODEGEN_END(DTO)

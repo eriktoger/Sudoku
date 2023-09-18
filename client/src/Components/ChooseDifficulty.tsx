@@ -20,6 +20,7 @@ const ChooseButton = ({
 
   const getBoard = async (hiddenCells: number) => {
     const url = import.meta.env.VITE_BACKEND_URL;
+    console.log({ url });
     setIsChooseButtonLoading(true);
     try {
       const res = await fetch(url, {
@@ -28,12 +29,14 @@ const ChooseButton = ({
           "Access-Control-Allow-Origin": "*",
         },
       });
+      console.log(res);
       const data = await res.json();
+      console.log(data);
 
       const maskingIndicies = [...Array(81).keys()]
         .sort(() => Math.random() - 0.5)
         .slice(0, hiddenCells);
-      const newBoard = JSON.parse(JSON.stringify(data));
+      const newBoard = JSON.parse(JSON.stringify(data.board));
       for (const maskingIndex of maskingIndicies) {
         const row = Math.floor(maskingIndex / 9);
         const col = maskingIndex - row * 9;
