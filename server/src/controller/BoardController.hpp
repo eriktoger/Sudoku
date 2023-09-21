@@ -29,12 +29,12 @@ public:
 public:
   ADD_CORS(root, "*", "GET", "DNT, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Range, access-control-allow-origin, cors", "1728000");
 
-  ENDPOINT("GET", "/", root)
+  ENDPOINT("GET", "/{seed}", root, PATH(Int32, seed))
   {
     auto dto = BoardDto::createShared();
     dto->statusCode = 200;
     dto->message = "The plan is to build a c++ backend to replace my C# one";
-    auto board = generateBoard();
+    auto board = generateBoard(*seed);
     dto->board = serializeBoard(board);
     auto response = createDtoResponse(Status::CODE_200, dto);
 

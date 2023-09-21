@@ -22,8 +22,10 @@ const ChooseButton = ({
     const url = import.meta.env.VITE_BACKEND_URL;
     console.log({ url });
     setIsChooseButtonLoading(true);
+    const seed = Math.floor(Math.random() * Math.pow(2, 32));
+
     try {
-      const res = await fetch(url, {
+      const res = await fetch(`${url}/${seed}`, {
         mode: "cors",
         headers: {
           "Access-Control-Allow-Origin": "*",
