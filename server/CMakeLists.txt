@@ -4,7 +4,8 @@ set(project_name my-project) ## rename your project here
 
 project(${project_name})
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_BUILD_TYPE Debug)
 
 add_library(${project_name}-lib
         src/AppComponent.hpp

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "client/**"
+      - "client-DISABLED/**"
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:

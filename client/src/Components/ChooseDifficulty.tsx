@@ -44,7 +44,7 @@ const ChooseButton = ({
       }
       setMaskedBoard(JSON.parse(JSON.stringify(newBoard)));
       setVisualBoard(JSON.parse(JSON.stringify(newBoard)));
-      setBoard(data);
+      setBoard(data.board);
       setGameOver(false);
     } catch (error) {
       console.warn({ error });

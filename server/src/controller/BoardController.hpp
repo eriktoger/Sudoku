@@ -9,7 +9,7 @@
 
 #include OATPP_CODEGEN_BEGIN(ApiController) //<-- Begin Codegen
 
-std::vector<std::vector<int>> generateBoard(int startinPieces);
+std::vector<std::vector<int>> generateBoard(unsigned startinPieces = 0);
 oatpp::Vector<oatpp::Vector<oatpp::Int32>> serializeBoard(std::vector<std::vector<int>> board);
 /**
  * Sample Api Controller.
@@ -34,7 +34,7 @@ public:
     auto dto = BoardDto::createShared();
     dto->statusCode = 200;
     dto->message = "The plan is to build a c++ backend to replace my C# one";
-    auto board = generateBoard(17);
+    auto board = generateBoard();
     dto->board = serializeBoard(board);
     auto response = createDtoResponse(Status::CODE_200, dto);
 
