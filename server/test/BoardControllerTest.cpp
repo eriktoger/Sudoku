@@ -9,15 +9,25 @@
 
 #include "oatpp-test/web/ClientServerTestRunner.hpp"
 
-std::vector<std::vector<int>> SEED_2 = {{7, 5, 2, 8, 6, 9, 1, 4, 3},
-                                        {8, 1, 6, 3, 4, 7, 9, 5, 2},
-                                        {4, 3, 9, 2, 1, 5, 6, 7, 8},
-                                        {2, 7, 8, 9, 3, 6, 4, 1, 5},
-                                        {9, 4, 3, 1, 5, 2, 8, 6, 7},
-                                        {1, 6, 5, 4, 7, 8, 2, 3, 9},
-                                        {5, 2, 7, 6, 9, 1, 3, 8, 4},
-                                        {3, 8, 1, 5, 2, 4, 7, 9, 6},
-                                        {6, 9, 4, 7, 8, 3, 5, 2, 1}};
+std::vector<std::vector<int>> SEED_2 = {{9, 3, 1, 4, 6, 5, 8, 7, 2},
+                                        {7, 6, 5, 1, 2, 8, 9, 4, 3},
+                                        {4, 8, 2, 9, 3, 7, 5, 1, 6},
+                                        {1, 5, 3, 8, 7, 2, 6, 9, 4},
+                                        {6, 9, 4, 5, 1, 3, 2, 8, 7},
+                                        {2, 7, 8, 6, 9, 4, 3, 5, 1},
+                                        {3, 4, 9, 2, 8, 1, 7, 6, 5},
+                                        {5, 2, 6, 7, 4, 9, 1, 3, 8},
+                                        {8, 1, 7, 3, 5, 6, 4, 2, 9}};
+
+std::vector<std::vector<int>> POST_INPUT_SEED_2 = {{9, 0, 0, 4, 6, 5, 8, 7, 2},
+                                                   {7, 6, 5, 1, 2, 8, 9, 4, 3},
+                                                   {4, 0, 2, 0, 3, 7, 5, 0, 6},
+                                                   {1, 5, 0, 8, 7, 2, 6, 9, 4},
+                                                   {6, 9, 4, 5, 1, 3, 2, 0, 7},
+                                                   {2, 7, 8, 6, 9, 4, 3, 5, 1},
+                                                   {3, 4, 9, 2, 8, 1, 7, 6, 5},
+                                                   {5, 2, 6, 7, 0, 9, 0, 3, 8},
+                                                   {8, 0, 0, 3, 5, 6, 4, 0, 9}};
 
 void BoardControllerTest::onRun()
 {
@@ -61,10 +71,31 @@ void BoardControllerTest::onRun()
                OATPP_ASSERT(message->statusCode == 200);
                OATPP_ASSERT(message->message == "The plan is to build a c++ backend to replace my C# one");
 
-               for(int row =0;row<SEED_2.size();row++){
-                for(int col=0;col<SEED_2[row].size();col++) {
-                    OATPP_ASSERT( message->board[row][col] == SEED_2[row][col]);
-                }
+               for (int row = 0; row < SEED_2.size(); row++)
+               {
+                 for (int col = 0; col < SEED_2[row].size(); col++)
+                 {
+                   OATPP_ASSERT(message->board[row][col] == SEED_2[row][col]);
+                 }
+               }
+               // Testing Post route
+
+                auto postDto = PostDto::createShared();
+
+                postDto->newboard = serializeBoard(POST_INPUT_SEED_2) ;
+                ;
+
+                auto postResponse = client->solve(postDto);
+                auto postMessage = postResponse->readBodyToDto<oatpp::Object<BoardDto>>(objectMapper.get());
+
+                OATPP_ASSERT(postMessage->statusCode == 200);
+
+                for (int row = 0; row < SEED_2.size(); row++)
+                {
+                  for (int col = 0; col < SEED_2[row].size(); col++)
+                  {
+                    OATPP_ASSERT(postMessage->board[row][col] == SEED_2[row][col]);
+                  }
                 } },
 
              std::chrono::minutes(10) /* test timeout */);

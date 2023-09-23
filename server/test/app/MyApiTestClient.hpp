@@ -19,6 +19,8 @@ class MyApiTestClient : public oatpp::web::client::ApiClient
 
   API_CALL("GET", "/2", getRoot)
 
+  API_CALL("POST", "/solve", solve, BODY_DTO(Object<PostDto>, newboard))
+
   // TODO - add more client API calls here
 };
 

@@ -20,6 +20,14 @@ class BoardDto : public oatpp::DTO
   DTO_FIELD(Vector<Vector<Int32>>, board); ///< Map<String, List<User>>
 };
 
+class PostDto : public oatpp::DTO
+{
+
+  DTO_INIT(PostDto, DTO)
+
+  DTO_FIELD(Vector<Vector<Int32>>, newboard);
+};
+
 #include OATPP_CODEGEN_END(DTO)
 
 #endif /* DTOs_hpp */

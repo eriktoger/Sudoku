@@ -53,7 +53,7 @@ void occupied_square(int row, int col, std::vector<std::vector<int>> &board, std
     }
 }
 
-std::vector<int> calcAlternatives(int row, int col, std::vector<std::vector<int>> &board, std::default_random_engine &rng)
+std::vector<int> calcAlternatives(int row, int col, std::vector<std::vector<int>> &board, std::default_random_engine &rng, std::vector<std::vector<int>> const &currentBoard)
 {
     std::set<int> occupied;
     occupied_horizontal(row, board, occupied);
@@ -66,40 +66,78 @@ std::vector<int> calcAlternatives(int row, int col, std::vector<std::vector<int>
     }
 
     // how to do this in c++ 23?
+    auto square = currentBoard[row][col];
     auto newEnd = std::remove_if(alternatives.begin(), alternatives.end(),
-                                 [](int ele)
-                                 { return ele == 0; });
+                                 [square](int ele)
+                                 { return square == 0 ? ele == square : ele != square; });
     alternatives.erase(newEnd, alternatives.end());
 
     std::shuffle(std::begin(alternatives), std::end(alternatives), rng);
     return alternatives;
 }
 
-std::vector<std::vector<int>> generateBoard(unsigned seed)
-{
-    std::vector<int> indicies(81);
-    std::vector<std::vector<int>> tries(81);
-    std::iota(std::begin(indicies), std::end(indicies), 0);
+// void printBoard(std::vector<std::vector<int>> &currentBoard)
+// {
 
-    std::vector<std::vector<int>> board;
+//     for (auto row : currentBoard)
+//     {
+//         for (auto square : row)
+//         {
+//             std::cout << square << " ";
+//         }
+//         std::cout << std::endl;
+//     }
+//     std::cout << std::endl;
+//     std::cout << std::endl;
+// }
+
+std::vector<std::vector<int>> generateBoard(unsigned seed, std::vector<std::vector<int>> currentBoard)
+{
+
+    auto alternativesTable = emptyBoard;
     seed = seed ? seed : std::chrono::system_clock::now().time_since_epoch().count();
     auto rng = std::default_random_engine{seed};
-    for (int i = 0; i < 9; i++)
+
+    for (int i = 0; i < 81; i++)
     {
-        std::vector<int> list(9);
-        board.push_back(list);
+        auto row = i / 9;
+        auto col = i % 9;
+
+        auto nrOfAlteratives = calcAlternatives(row, col, currentBoard, rng, currentBoard).size();
+        if (nrOfAlteratives == 0)
+        {
+            alternativesTable[row][col] = 10;
+        }
+        else
+        {
+            alternativesTable[row][col] = nrOfAlteratives;
+        }
+    }
+    std::vector<int> indices(81);
+    std::iota(std::begin(indices), std::end(indices), 0);
+    std::sort(std::begin(indices), std::end(indices), [&alternativesTable](const int &a, const int &b)
+              { return alternativesTable[a / 9][a % 9] < alternativesTable[b / 9][b % 9]; });
+
+    std::vector<std::vector<int>> tries(81);
+
+    std::vector<std::vector<int>> board;
+
+    for (auto row : currentBoard)
+    {
+        board.push_back(row);
     }
 
-    // solve it in that order
-    // I need a map/vector for all tried
     int square = 0;
     std::vector<int> triesIndex(81);
-    int index = indicies[square];
+    int index = indices[square];
     auto row = index / 9;
     auto col = index % 9;
-    tries[index] = calcAlternatives(row, col, board, rng);
+    tries[index] = calcAlternatives(row, col, board, rng, currentBoard);
 
-    while (square < 81)
+    int zeroCount = std::accumulate(currentBoard.begin(), currentBoard.end(), 0, [](int total, const std::vector<int> &row)
+                                    { return total + std::count(row.begin(), row.end(), 0); });
+
+    while (true)
     {
 
         if (tries[index].size() > triesIndex[index])
@@ -107,23 +145,24 @@ std::vector<std::vector<int>> generateBoard(unsigned seed)
             board[row][col] = tries[index][triesIndex[index]];
             square++;
 
-            if (square == 81)
+            if (square == zeroCount)
             {
                 break;
             }
-            index = indicies[square];
+            index = indices[square];
             row = index / 9;
             col = index % 9;
-            tries[index] = calcAlternatives(row, col, board, rng);
+            tries[index] = calcAlternatives(row, col, board, rng, currentBoard);
         }
         else
         {
+
             board[row][col] = 0;
             triesIndex[index] = 0;
             tries[index].clear();
             square--;
 
-            index = indicies[square];
+            index = indices[square];
             row = index / 9;
             col = index % 9;
             triesIndex[index]++;
@@ -148,4 +187,19 @@ oatpp::Vector<oatpp::Vector<oatpp::Int32>> serializeBoard(std::vector<std::vecto
     }
 
     return serializedBoard;
+}
+
+std::vector<std::vector<int>> deserializeBoard(oatpp::Vector<oatpp::Vector<oatpp::Int32>> board)
+{
+    std::vector<std::vector<int>> deserializedBoard;
+    for (int row = 0; row < board->size(); row++)
+    {
+        std::vector<int> list;
+        for (int col = 0; col < board->at(row)->size(); col++)
+        {
+            list.emplace_back(board->at(row)->at(col));
+        }
+        deserializedBoard.emplace_back(list);
+    }
+    return deserializedBoard;
 }

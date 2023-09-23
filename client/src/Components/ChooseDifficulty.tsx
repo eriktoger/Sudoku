@@ -22,7 +22,7 @@ const ChooseButton = ({
     const url = import.meta.env.VITE_BACKEND_URL;
     console.log({ url });
     setIsChooseButtonLoading(true);
-    const seed = Math.floor(Math.random() * Math.pow(2, 32));
+    const seed = Math.floor(Math.random() * Math.pow(2, 16));
 
     try {
       const res = await fetch(`${url}/${seed}`, {
@@ -31,17 +31,14 @@ const ChooseButton = ({
           "Access-Control-Allow-Origin": "*",
         },
       });
-      console.log(res);
       const data = await res.json();
-      console.log(data);
-
       const maskingIndicies = [...Array(81).keys()]
         .sort(() => Math.random() - 0.5)
         .slice(0, hiddenCells);
       const newBoard = JSON.parse(JSON.stringify(data.board));
       for (const maskingIndex of maskingIndicies) {
         const row = Math.floor(maskingIndex / 9);
-        const col = maskingIndex - row * 9;
+        const col = maskingIndex % 9;
         newBoard[row][col] = 0;
       }
       setMaskedBoard(JSON.parse(JSON.stringify(newBoard)));
@@ -69,7 +66,7 @@ const GameModes = [
   { text: "Test", hiddenCells: 1 },
   { text: "Easy", hiddenCells: 30 },
   { text: "Medium", hiddenCells: 45 },
-  { text: "Hard", hiddenCells: 60 },
+  { text: "Hard", hiddenCells: 64 },
 ] as const;
 
 export const ChooseDifficulty = () => {
