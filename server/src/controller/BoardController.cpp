@@ -4,6 +4,7 @@
 #include <random>
 #include <set>
 #include <iostream>
+#include <string>
 // TODO - SOME CODE HERE
 
 void occupied_horizontal(int row, std::vector<std::vector<int>> &board, std::set<int> &occupied)
@@ -52,29 +53,33 @@ void occupied_square(int row, int col, std::vector<std::vector<int>> &board, std
         }
     }
 }
-
+// std::vector<int> calcAlternatives(int row, int col, std::vector<std::vector<int>> &board, std::default_random_engine &rng, std::vector<std::vector<int>> const &currentBoard)
 std::vector<int> calcAlternatives(int row, int col, std::vector<std::vector<int>> &board, std::default_random_engine &rng)
 {
+
     std::set<int> occupied;
     occupied_horizontal(row, board, occupied);
     occupied_vertical(col, board, occupied);
     occupied_square(row, col, board, occupied);
-    std::vector<int> alternatives{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+    std::vector<int> alternatives = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     for (auto occy : occupied)
     {
         alternatives[occy] = 0;
     }
 
     // how to do this in c++ 23?
+    // auto square = currentBoard[row][col];
+    auto square = 0;
     auto newEnd = std::remove_if(alternatives.begin(), alternatives.end(),
-                                 [](int ele)
-                                 { return ele == 0; });
+                                 [square](int ele)
+                                 { return square == 0 ? ele == square : ele != square; });
     alternatives.erase(newEnd, alternatives.end());
 
     std::shuffle(std::begin(alternatives), std::end(alternatives), rng);
     return alternatives;
 }
-
+// std::vector<std::vector<int>> generateBoard(unsigned seed, std::vector<std::vector<int>> currentBoard)
 std::vector<std::vector<int>> generateBoard(unsigned seed)
 {
     std::vector<int> indicies(81);
@@ -148,4 +153,23 @@ oatpp::Vector<oatpp::Vector<oatpp::Int32>> serializeBoard(std::vector<std::vecto
     }
 
     return serializedBoard;
+}
+
+std::vector<std::vector<int>> deserializeBoard(oatpp::Vector<oatpp::Vector<oatpp::Int32>> board)
+{
+    std::cout << "here 1c" << std::endl;
+    std::vector<std::vector<int>> deserializedBoard;
+
+    std::cout << "here 1d" << std::endl;
+    for (int row = 0; row < board->size(); row++)
+    {
+        std::vector<int> list;
+        for (int col = 0; col < board->at(row)->size(); col++)
+        {
+            list.emplace_back(board->at(row)->at(col));
+        }
+        deserializedBoard.emplace_back(list);
+    }
+    std::cout << "here 1e" << std::endl;
+    return deserializedBoard;
 }

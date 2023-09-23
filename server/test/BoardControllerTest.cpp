@@ -8,6 +8,7 @@
 #include "oatpp/web/client/HttpRequestExecutor.hpp"
 
 #include "oatpp-test/web/ClientServerTestRunner.hpp"
+// #include "../src/dto/DTOs.hpp"
 
 std::vector<std::vector<int>> SEED_2 = {{7, 5, 2, 8, 6, 9, 1, 4, 3},
                                         {8, 1, 6, 3, 4, 7, 9, 5, 2},
@@ -18,6 +19,16 @@ std::vector<std::vector<int>> SEED_2 = {{7, 5, 2, 8, 6, 9, 1, 4, 3},
                                         {5, 2, 7, 6, 9, 1, 3, 8, 4},
                                         {3, 8, 1, 5, 2, 4, 7, 9, 6},
                                         {6, 9, 4, 7, 8, 3, 5, 2, 1}};
+
+oatpp::Vector<oatpp::Vector<oatpp::Int32>> POST_INPUT_SEED_2 = {{7, 5, 2, 8, 6, 9, 1, 4, 3},
+                                                                {8, 1, 6, 3, 4, 7, 9, 5, 2},
+                                                                {4, 3, 9, 2, 1, 5, 6, 7, 8},
+                                                                {2, 7, 8, 9, 3, 6, 4, 1, 5},
+                                                                {9, 4, 3, 1, 5, 2, 8, 6, 7},
+                                                                {1, 6, 5, 4, 7, 8, 2, 0, 9},
+                                                                {5, 2, 7, 6, 9, 1, 3, 8, 4},
+                                                                {3, 8, 1, 5, 2, 4, 7, 9, 6},
+                                                                {6, 9, 4, 7, 8, 3, 5, 2, 1}};
 
 void BoardControllerTest::onRun()
 {
@@ -61,11 +72,34 @@ void BoardControllerTest::onRun()
                OATPP_ASSERT(message->statusCode == 200);
                OATPP_ASSERT(message->message == "The plan is to build a c++ backend to replace my C# one");
 
-               for(int row =0;row<SEED_2.size();row++){
-                for(int col=0;col<SEED_2[row].size();col++) {
-                    OATPP_ASSERT( message->board[row][col] == SEED_2[row][col]);
-                }
-                } },
+               for (int row = 0; row < SEED_2.size(); row++)
+               {
+                 for (int col = 0; col < SEED_2[row].size(); col++)
+                 {
+                   OATPP_ASSERT(message->board[row][col] == SEED_2[row][col]);
+                 }
+               }
+
+               // Testing Post route
+
+               //  auto postDto = PostDto::createShared();
+
+               //  postDto->newboard = POST_INPUT_SEED_2 ;
+               //  ;
+
+               //  auto postResponse = client->solve(postDto);
+               //  auto postMessage = postResponse->readBodyToDto<oatpp::Object<BoardDto>>(objectMapper.get());
+
+               //  OATPP_ASSERT(postMessage->statusCode == 200);
+
+               //  for (int row = 0; row < SEED_2.size(); row++)
+               //  {
+               //    for (int col = 0; col < SEED_2[row].size(); col++)
+               //    {
+               //      OATPP_ASSERT(postMessage->board[row][col] == SEED_2[row][col]);
+               //    }
+               //  }
+             },
 
              std::chrono::minutes(10) /* test timeout */);
 
