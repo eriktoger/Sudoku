@@ -1,0 +1,6 @@
+#ifndef VARS_HPP_IN
+#define VARS_HPP_IN
+
+#define FRONTEND_PATH "@FRONTEND_PATH@"
+
+#endif // VARS_HPP_IN

@@ -9,7 +9,8 @@ export const ShowSolution = () => {
     <div style={{ width: 360, display: "flex", justifyContent: "center" }}>
       <button
         onClick={async () => {
-          const response = await fetch("http://localhost:8000/solve", {
+          const url = import.meta.env.VITE_BACKEND_URL;
+          const response = await fetch(`${url}/solve`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

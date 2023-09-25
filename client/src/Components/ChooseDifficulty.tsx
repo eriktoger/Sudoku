@@ -20,7 +20,6 @@ const ChooseButton = ({
 
   const getBoard = async (hiddenCells: number) => {
     const url = import.meta.env.VITE_BACKEND_URL;
-    console.log({ url });
     setIsChooseButtonLoading(true);
     const seed = Math.floor(Math.random() * Math.pow(2, 16));
 

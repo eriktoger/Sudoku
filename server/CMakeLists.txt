@@ -6,6 +6,7 @@ project(${project_name})
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_BUILD_TYPE Debug)
+set(FRONTEND_PATH ${FRONTEND_PATH})
 
 add_library(${project_name}-lib
         src/AppComponent.hpp
@@ -26,7 +27,7 @@ target_link_libraries(${project_name}-lib
 target_include_directories(${project_name}-lib PUBLIC src)
 
 ## add executables
-
+configure_file (src/vars.hpp.in ${CMAKE_CURRENT_SOURCE_DIR}/src/vars.hpp @ONLY)
 add_executable(${project_name}-exe
         src/App.cpp
         test/app/MyApiTestClient.hpp)

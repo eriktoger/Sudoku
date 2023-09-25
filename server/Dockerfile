@@ -27,7 +27,7 @@ RUN ./install-oatpp-modules.sh
 
 WORKDIR /service/build
 
-RUN cmake ..
+RUN cmake .. -DFRONTEND_PATH="https://erikssudoku.netlify.app"
 RUN make
 
 EXPOSE 8000 8000

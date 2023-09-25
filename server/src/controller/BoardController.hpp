@@ -7,6 +7,7 @@
 #include "oatpp/core/macro/codegen.hpp"
 #include "oatpp/core/macro/component.hpp"
 #include <iostream>
+#include "../vars.hpp"
 #include OATPP_CODEGEN_BEGIN(ApiController) //<-- Begin Codegen
 
 const std::vector<int> emptyRow(9, 0);
@@ -31,7 +32,7 @@ public:
   }
 
 public:
-  ADD_CORS(root, "*", "GET", "DNT, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Range, access-control-allow-origin, cors", "1728000");
+  ADD_CORS(root, FRONTEND_PATH, "GET", "DNT, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Range, access-control-allow-origin, cors", "1728000");
 
   ENDPOINT("GET", "/{seed}", root, PATH(Int32, seed))
   {
@@ -45,7 +46,7 @@ public:
     return response;
   }
 
-  ADD_CORS(solve, "*", "GET", "DNT, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Range, access-control-allow-origin, cors", "1728000");
+  ADD_CORS(solve, FRONTEND_PATH, "GET", "DNT, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Range, access-control-allow-origin, cors", "1728000");
 
   ENDPOINT("POST", "/solve", solve, BODY_DTO(Object<PostDto>, input))
   {
