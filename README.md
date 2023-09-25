@@ -4,6 +4,7 @@
 
 - Lets the user play the game that the api provides
 - Deployed at [netlify](https://erikssudoku.netlify.app/)
+- It is deployed in free tier, so it is quite slow at first
 - To run locally: cd into client and run `npm run dev`
 
 ### Server
