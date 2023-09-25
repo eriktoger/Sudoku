@@ -12,7 +12,7 @@
 
 const std::vector<int> emptyRow(9, 0);
 const std::vector<std::vector<int>> emptyBoard(9, emptyRow);
-std::vector<std::vector<int>> generateBoard(unsigned startinPieces = 0, std::vector<std::vector<int>> currentBoard = emptyBoard);
+std::vector<std::vector<int>> solveBoard(unsigned seed = 0, std::vector<std::vector<int>> currentBoard = emptyBoard, bool isGenerate = true);
 oatpp::Vector<oatpp::Vector<oatpp::Int32>> serializeBoard(std::vector<std::vector<int>> board);
 std::vector<std::vector<int>> deserializeBoard(oatpp::Vector<oatpp::Vector<oatpp::Int32>> newboard);
 
@@ -39,7 +39,7 @@ public:
     auto dto = BoardDto::createShared();
     dto->statusCode = 200;
     dto->message = "The plan is to build a c++ backend to replace my C# one";
-    auto board = generateBoard(*seed);
+    auto board = solveBoard(*seed);
     dto->board = serializeBoard(board);
     auto response = createDtoResponse(Status::CODE_200, dto);
 
@@ -54,7 +54,7 @@ public:
     dto->statusCode = 200;
     dto->message = "Solution";
     auto deserilizedBoard = deserializeBoard(input->newboard);
-    auto board = generateBoard(2, deserilizedBoard);
+    auto board = solveBoard(2, deserilizedBoard, false);
     dto->board = serializeBoard(board);
     auto response = createDtoResponse(Status::CODE_200, dto);
 

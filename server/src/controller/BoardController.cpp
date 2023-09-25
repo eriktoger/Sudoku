@@ -91,7 +91,7 @@ std::vector<int> calcAlternatives(int row, int col, std::vector<std::vector<int>
 //     std::cout << std::endl;
 // }
 
-std::vector<std::vector<int>> generateBoard(unsigned seed, std::vector<std::vector<int>> currentBoard)
+std::vector<std::vector<int>> solveBoard(unsigned seed, std::vector<std::vector<int>> currentBoard, bool isGenerate)
 {
 
     auto alternativesTable = emptyBoard;
@@ -115,8 +115,12 @@ std::vector<std::vector<int>> generateBoard(unsigned seed, std::vector<std::vect
     }
     std::vector<int> indices(81);
     std::iota(std::begin(indices), std::end(indices), 0);
-    std::sort(std::begin(indices), std::end(indices), [&alternativesTable](const int &a, const int &b)
-              { return alternativesTable[a / 9][a % 9] < alternativesTable[b / 9][b % 9]; });
+
+    if (!isGenerate)
+    {
+        std::sort(std::begin(indices), std::end(indices), [&alternativesTable](const int &a, const int &b)
+                  { return alternativesTable[a / 9][a % 9] < alternativesTable[b / 9][b % 9]; });
+    }
 
     std::vector<std::vector<int>> tries(81);
 
