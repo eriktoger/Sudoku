@@ -4,7 +4,7 @@ export const ShowSolution = () => {
   const setGameOver = useAppStore((state) => state.setGameOver);
   const setVisualBoard = useAppStore((state) => state.setVisualBoard);
   const setGameOverMessage = useAppStore((state) => state.setGameOverMessage);
-  const maskedBoard = useAppStore((state) => state.maskedBoard);
+  const board = useAppStore((state) => state.board);
   return (
     <div style={{ width: 360, display: "flex", justifyContent: "center" }}>
       <button
@@ -15,7 +15,7 @@ export const ShowSolution = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ newboard: maskedBoard }),
+            body: JSON.stringify({ newboard: board }),
           });
           const data = await response.json();
           setVisualBoard(data.board);

@@ -4,7 +4,6 @@
 #include <random>
 #include <set>
 #include <iostream>
-// TODO - SOME CODE HERE
 
 void occupied_horizontal(int row, std::vector<std::vector<int>> &board, std::set<int> &occupied)
 {
@@ -206,4 +205,41 @@ std::vector<std::vector<int>> deserializeBoard(oatpp::Vector<oatpp::Vector<oatpp
         deserializedBoard.emplace_back(list);
     }
     return deserializedBoard;
+}
+
+int getMaskNumber(oatpp::String difficulty)
+{
+
+    if (difficulty == "test")
+    {
+        return 1;
+    }
+    if (difficulty == "easy")
+    {
+        return 20;
+    }
+    if (difficulty == "medium")
+    {
+        return 45;
+    }
+    if (difficulty == "hard")
+    {
+        return 64;
+    }
+    return 0;
+}
+void maskBoard(std::vector<std::vector<int>> &board, int seed, oatpp::String difficulty)
+{
+    auto rng = std::default_random_engine{seed};
+    std::vector<int> indices(81);
+    std::iota(std::begin(indices), std::end(indices), 0);
+    shuffle(indices.begin(), indices.end(), rng);
+    auto maskNumber = getMaskNumber(difficulty);
+
+    while (maskNumber--)
+    {
+        auto row = indices[maskNumber] / 9;
+        auto col = indices[maskNumber] % 9;
+        board[row][col] = 0;
+    }
 }

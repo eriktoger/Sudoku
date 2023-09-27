@@ -15,7 +15,7 @@ const std::vector<std::vector<int>> emptyBoard(9, emptyRow);
 std::vector<std::vector<int>> solveBoard(unsigned seed = 0, std::vector<std::vector<int>> currentBoard = emptyBoard, bool isGenerate = true);
 oatpp::Vector<oatpp::Vector<oatpp::Int32>> serializeBoard(std::vector<std::vector<int>> board);
 std::vector<std::vector<int>> deserializeBoard(oatpp::Vector<oatpp::Vector<oatpp::Int32>> newboard);
-
+void maskBoard(std::vector<std::vector<int>> &board, int seed, oatpp::String difficulty);
 /**
  * Sample Api Controller.
  */
@@ -34,12 +34,13 @@ public:
 public:
   ADD_CORS(root, FRONTEND_PATH, "GET", "DNT, User-Agent, X-Requested-With, If-Modified-Since, Cache-Control, Content-Type, Range, access-control-allow-origin, cors", "1728000");
 
-  ENDPOINT("GET", "/{seed}", root, PATH(Int32, seed))
+  ENDPOINT("GET", "/{difficulty}/{seed}", root, PATH(String, difficulty), PATH(Int32, seed))
   {
     auto dto = BoardDto::createShared();
     dto->statusCode = 200;
     dto->message = "The plan is to build a c++ backend to replace my C# one";
     auto board = solveBoard(*seed);
+    maskBoard(board, *seed, difficulty);
     dto->board = serializeBoard(board);
     auto response = createDtoResponse(Status::CODE_200, dto);
 

@@ -16,11 +16,11 @@ export const Cell = ({
   );
   const setCurrentCell = useAppStore((state) => state.setCurrentCell);
   const currentCell = useAppStore((state) => state.currentCell);
-  const maskedBoard = useAppStore((state) => state.maskedBoard);
+  const board = useAppStore((state) => state.board);
 
   const display = content === "0" ? "" : content;
   const { rowIndex, columnIndex } = coordinate;
-  const isEditable = maskedBoard?.[rowIndex][columnIndex] === 0;
+  const isEditable = board?.[rowIndex][columnIndex] === 0;
 
   const isSelected =
     currentCell?.rowIndex === rowIndex &&

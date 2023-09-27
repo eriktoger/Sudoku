@@ -8,8 +8,6 @@ type State = {
   setGameOverMessage: (gameOver: string) => void;
   board: Board | null;
   setBoard: (board: Board | null) => void;
-  maskedBoard: Board | null;
-  setMaskedBoard: (maskedBoard: Board | null) => void;
   visualBoard: Board | null;
   setVisualBoard: (visualBoard: Board | null) => void;
   applyAlternativeToVisualBoard: (alternative: number) => void;
@@ -29,8 +27,6 @@ export const useAppStore = create<State>((set) => ({
   setGameOverMessage: (gameOverMessage: string) => set({ gameOverMessage }),
   board: null,
   setBoard: (board: Board | null) => set({ board }),
-  maskedBoard: null,
-  setMaskedBoard: (maskedBoard: Board | null) => set({ maskedBoard }),
   visualBoard: null,
   setVisualBoard: (visualBoard: Board | null) => set({ visualBoard }),
   currentCell: null,

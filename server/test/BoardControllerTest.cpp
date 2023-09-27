@@ -75,7 +75,11 @@ void BoardControllerTest::onRun()
                {
                  for (int col = 0; col < SEED_2[row].size(); col++)
                  {
-                   OATPP_ASSERT(message->board[row][col] == SEED_2[row][col]);
+                  if(row==3 && col ==8){
+                    OATPP_ASSERT(message->board[row][col] == 0);
+                  }else{
+                    OATPP_ASSERT(message->board[row][col] == SEED_2[row][col]);
+                  }
                  }
                }
                // Testing Post route

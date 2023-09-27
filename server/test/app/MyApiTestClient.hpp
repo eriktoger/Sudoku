@@ -17,7 +17,7 @@ class MyApiTestClient : public oatpp::web::client::ApiClient
 
   API_CLIENT_INIT(MyApiTestClient)
 
-  API_CALL("GET", "/2", getRoot)
+  API_CALL("GET", "/test/2", getRoot)
 
   API_CALL("POST", "/solve", solve, BODY_DTO(Object<PostDto>, newboard))
 

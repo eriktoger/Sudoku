@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     const url = import.meta.env.VITE_BACKEND_URL;
 
-    fetch(`${url}/0`, {
+    fetch(`${url}/test/0`, {
       mode: "cors",
       headers: {
         "Access-Control-Allow-Origin": "*",
