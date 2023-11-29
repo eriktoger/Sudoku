@@ -26,7 +26,7 @@ const ChooseButton = ({ gameMode }: { gameMode: string }) => {
       });
       const data = await res.json();
 
-      setVisualBoard(data.board);
+      setVisualBoard(JSON.parse(JSON.stringify(data.board)));
       setBoard(data.board);
       setGameOver(false);
     } catch (error) {
